@@ -5,7 +5,7 @@ import {DownloadOutlined} from '@ant-design/icons';
 import {getTransactions, transactionCSV} from "../Services/apiCall";
 import {formatDateTime} from "../utils/dateTime";
 import {WalletContext} from "../context";
-import {TABLE_SORT_FIELDS} from "../Services/constants";
+import {TABLE_PAGESIZE, TABLE_SORT_FIELDS} from "../Services/constants";
 
 
 const TableContainer = styled.div`
@@ -60,6 +60,9 @@ const PaginationContainer = styled.div`
     gap: 1rem;
     margin-top: 1rem;
 `;
+
+// DEV_NOTE: could used take state, but this data we dont need re-render to update.
+// keeping it simple: saving it in-momory and clearing at the time of unmount.
 let CACHE_STORE = {}
 
 function TransactionsTable() {
@@ -69,14 +72,12 @@ function TransactionsTable() {
     const [loading, setLoading] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
     const [sortBy, setSortBy] = useState(TABLE_SORT_FIELDS.DATE);
-    const [hasMore, setHasMore] = useState(true);
+    const [hasMore, setHasMore] = useState({data: true, lastPage: 1 });
 
     // DEV_NOTE: response list cached
     // better: cached on the basis of the sorted array too.
     // Also: should keep a max limit to cached data. The state variable to not be bulky
     // const [cache, setCache] = useState({});
-    const pageSize = 10;
-
 
     const handleSort = (value) => {
         setCurrentPage(1)
@@ -92,8 +93,8 @@ function TransactionsTable() {
 
         setLoading(true);
         try {
-            const skip = (page - 1) * pageSize;
-            const data = await getTransactions({skip, limit: pageSize, sortBy:sort});
+            const skip = (page - 1) * TABLE_PAGESIZE;
+            const data = await getTransactions({skip, limit: TABLE_PAGESIZE, sortBy:sort});
 
 
             // Update cache
@@ -101,8 +102,8 @@ function TransactionsTable() {
             CACHE_STORE.sortBy = sort
             setTransactions(data);
 
-            // If we got less than pageSize items, we've reached the end
-            setHasMore(data.length === pageSize);
+            // If we got less than TABLE_PAGESIZE items, we've reached the end
+            setHasMore({data: data.length === TABLE_PAGESIZE, lastPage: page});
         } catch (error) {
             console.error('Error fetching transactions:', error);
         } finally {
@@ -116,14 +117,14 @@ function TransactionsTable() {
 
     useEffect(() => {
         return ()=>{
-            console.log("Peace OUT");
+            // why: check DEV_NOTE above
             CACHE_STORE = {}
         }
     }, []);
 
     const getCSVDownloadURL = useMemo(() => transactionCSV(), [walletDetails]);
     const handleNext = () => {
-        if (hasMore) {
+        if (hasMore.data) {
             setCurrentPage(prev => prev + 1);
         }
     };
@@ -133,7 +134,6 @@ function TransactionsTable() {
             setCurrentPage(prev => prev - 1);
         }
     };
-
 
     return (
         <TableContainer>
@@ -177,7 +177,7 @@ function TransactionsTable() {
                         Previous
                     </Button>
                 )}
-                {hasMore && (
+                {(hasMore.data || hasMore.lastPage!==currentPage) && (
                     <Button onClick={handleNext} disabled={loading}>
                         Next
                     </Button>

@@ -67,16 +67,14 @@ const StickyNoteGrid = styled.div`
 
 function TransactionSearch() {
     const {
-        setSearchText, // Expose setter for searchText
         fetchSearch,   // Expose the API call function
         results,
-        isLoading,
-        error,
+        isLoading
     } = useSearch(transactionSearch);
     return (
         <SearchContainer>
             <Search
-                placeholder="input search text"
+                placeholder="Search description"
                 allowClear
                 enterButton="Search"
                 size="large"

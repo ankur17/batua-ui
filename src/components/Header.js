@@ -48,6 +48,13 @@ const Branding = styled.div`
     align-items: center;
 `
 
+const FloatingAlert = styled.div`
+    position: fixed;
+    bottom: 0;
+    left:50%;
+    transform: translateX(-50%);
+`
+
 function Header() {
     const {walletDetails, hasWallet} = React.useContext(WalletContext);
     return (
@@ -61,6 +68,7 @@ function Header() {
                     Balance: ${walletDetails?.balance?.toLocaleString('en-US', { minimumFractionDigits: 4, maximumFractionDigits: 4 })}
                 </WalletBalance>
             </HeaderContent>
+            {!hasWallet && <FloatingAlert>Note: first API call might be slow due to server spin-up</FloatingAlert>}
         </HeaderContainer>
     );
 }

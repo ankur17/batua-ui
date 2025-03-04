@@ -40,8 +40,6 @@ export const createTransaction = async ({amount, description}) => {
 
         const response = await postFetch(url, payload);
         const data = await response.json();
-        console.log("POST", data);
-
         return data
 
     } catch (err) {
@@ -73,7 +71,6 @@ export const transactionCSV = () => {
 
 export const transactionSearch = (search) => {
     const walletId = resolveWalletId()
-    console.log("REACHED", search)
     const url = `${SERVER_URL + API_PATH}/transactions/search`;
     return getFetch(url, {walletId, search})
 }

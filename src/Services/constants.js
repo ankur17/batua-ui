@@ -14,3 +14,5 @@ export const TABLE_SORT_FIELDS = {
     DATE: "DATE",
     AMOUNT: "AMOUNT",
 }
+
+export const TABLE_PAGESIZE = 10
