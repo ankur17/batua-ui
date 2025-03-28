@@ -1,6 +1,6 @@
 import React from 'react';
 
-function Header() {
+function Header({ balance = 0, logo = 'Wallet App' }) {
     return (
         <header style={{
             backgroundColor: '#fff',
@@ -18,10 +18,10 @@ function Header() {
             margin: '0 auto'
         }}>
             <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#222' }}>
-                Wallet App
+                {logo}
             </div>
             <div style={{ fontSize: '1.25rem', color: '#218838', fontWeight: '600' }}>
-                Balance: $100.00
+                Balance: ${balance.toFixed(2)}
             </div>
         </header>
     );
