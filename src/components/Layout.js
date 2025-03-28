@@ -1,17 +1,19 @@
 import styled from 'styled-components';
+// import Navbar from './Navbar';
 
-const Title = styled.h1`
-  color: #333;
-  margin-top: 2rem;
+const Container = styled.div`
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
 `;
 
-function Home() {
+const Layout = ({ children }) => {
     return (
-        <div>
-            <Title>Welcome to our Home Page</Title>
-            <p>This is a basic example using React Router and Styled Components.</p>
-        </div>
+        <>
+            {/*<Navbar />*/}
+            <Container>{children}</Container>
+        </>
     );
-}
+};
 
-export default Home;
+export default Layout;
