@@ -1,18 +1,25 @@
-import styled from 'styled-components';
-import {Layout} from "antd";
-import Header from "../components/Header";
+import React from 'react';
+import { Layout, Typography } from 'antd';
+import WalletForm from '../components/WalletForm';
+import TransactionForm from '../components/TransactionForm';
+import TransactionsTable from '../components/TransactionsTable';
+import Footer from '../components/Footer';
 
-const Title = styled.h1`
-  color: #333;
-  margin-top: 2rem;
-`;
+const { Content } = Layout;
+const { Title } = Typography;
 
 function Home() {
     return (
         <Layout>
-            <Title>Welcome to our Home Page</Title>
-            <p>This is a basic example using React Router and Styled Components.</p>
-            <Header/>
+            <Footer />
+            <Content style={{ marginTop: '64px', padding: '24px' }}>
+                <Title level={1} style={{ textAlign: 'center', marginBottom: '2rem' }}>
+                    Wallet Management System
+                </Title>
+                <WalletForm />
+                <TransactionForm />
+                <TransactionsTable />
+            </Content>
         </Layout>
     );
 }
