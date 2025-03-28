@@ -3,6 +3,8 @@ import styled from 'styled-components';
 import { Button } from 'antd';
 import { DownloadOutlined } from '@ant-design/icons';
 
+const API_BASE_URL = 'http://localhost:8081/api/v1/transactions?walletId=67e32b50bcd1a5b93e017f36&';
+
 const TableContainer = styled.div`
   margin: 2rem auto;
   max-width: 1000px;
@@ -55,18 +57,49 @@ function TransactionsTable() {
     const [loading, setLoading] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
     const [hasMore, setHasMore] = useState(true);
-
+    const [cache, setCache] = useState({});
+    const pageSize = 10;
 
     const fetchTransactions = async (page) => {
-    }
+        // Check cache first
+        if (cache[page]) {
+            setTransactions(cache[page]);
+            return;
+        }
+
+        setLoading(true);
+        try {
+            const skip = (page - 1) * pageSize;
+            const response = await fetch(`${API_BASE_URL}&skip=${skip}&limit=${pageSize}`);
+            const data = await response.json();
+
+            // Update cache
+            setCache(prev => ({ ...prev, [page]: data }));
+            setTransactions(data);
+
+            // If we got less than pageSize items, we've reached the end
+            setHasMore(data.length === pageSize);
+        } catch (error) {
+            console.error('Error fetching transactions:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     useEffect(() => {
+        fetchTransactions(currentPage);
     }, [currentPage]);
 
     const handleNext = () => {
+        if (hasMore) {
+            setCurrentPage(prev => prev + 1);
+        }
     };
 
     const handlePrevious = () => {
+        if (currentPage > 1) {
+            setCurrentPage(prev => prev - 1);
+        }
     };
 
     const handleExport = () => {
