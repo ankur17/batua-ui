@@ -24,13 +24,40 @@ const ToggleContainer = styled.div`
   gap: 1rem;
 `;
 
+const WALLET_ID = '67e32b50bcd1a5b93e017f36';
+const API_URL = `http://localhost:8081/api/v1/transact/${WALLET_ID}`;
+
 function TransactionForm() {
     const [form] = Form.useForm();
     const [isCredit, setIsCredit] = useState(true);
     const [loading, setLoading] = useState(false);
 
     const handleSubmit = async (values) => {
+        setLoading(true);
+        try {
+            const response = await fetch(API_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    amount: isCredit ? Math.abs(values.amount) : -Math.abs(values.amount),
+                    description: values.description
+                }),
+            });
 
+            if (!response.ok) {
+                throw new Error('Transaction failed');
+            }
+
+            message.success('Transaction completed successfully');
+            form.resetFields();
+        } catch (error) {
+            console.error('Error:', error);
+            message.error('Failed to complete transaction');
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
