@@ -1,7 +1,7 @@
 import {LOCALSTORE_KEYS} from "./constants";
 
 const API_PATH = '/api/v1';
-const SERVER_URL = "http://localhost:8081";
+const SERVER_URL = process.env.REACT_APP_SERVER_URL;
 
 const resolveWalletId = () => {
     const walletData = localStorage.getItem(LOCALSTORE_KEYS.WALLET_DETAILS);
@@ -34,6 +34,23 @@ export const getWalletDetails = async (walletId) => {
     const data = await response.json();
     console.log("OUT", data);
     return data;
+}
+
+export const setupWallet = async ({name, balance}) => {
+    try {
+        const url = `${SERVER_URL + API_PATH}/setup`
+        const payload = {name, balance};
+
+        const response = await postFetch(url, payload);
+        const data = await response.json();
+
+        //DEV_NOTE: since Api calls are consuming the "walletId" it should be updated in ths scope only
+        localStorage.setItem(LOCALSTORE_KEYS.WALLET_ID, data.id);
+        return data;
+    } catch (err) {
+        console.error(err, err.message);
+        throw new Error(err?.response?.data?.message)
+    }
 }
 
 
@@ -78,4 +95,11 @@ export const transactionCSV = () => {
         console.log(e)
     }
     return ""
+}
+
+export const transactionSearch = (search) => {
+    const walletId = resolveWalletId()
+    console.log("REACHED", search)
+    const url = `${SERVER_URL + API_PATH}/transactions/search`;
+    return getFetch(url, {walletId, search})
 }
