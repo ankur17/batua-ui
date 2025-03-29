@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import styled, { keyframes } from 'styled-components';
+import React, {useState} from 'react';
+import styled, {keyframes} from 'styled-components';
 import {Input, Button, Switch, message, Form, InputNumber} from 'antd';
 import {MinusOutlined, PlusOutlined} from '@ant-design/icons';
 import {WalletContext} from "../context";
@@ -11,7 +11,7 @@ const bounce = keyframes`
         transform: translateY(30%);
         opacity: 0;
     }
-    to{
+    to {
         transform: translateY(0);
         opacity: 1;
     }
@@ -34,13 +34,13 @@ const StyledForm = styled(Form)`
 `;
 
 const ToggleContainer = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
 `;
 
-function TransactionForm({setWalletDetails}) {
-    const {walletDetails, hasWallet} = React.useContext(WalletContext);
+function TransactionForm({}) {
+    const {walletDetails, setWalletDetails} = React.useContext(WalletContext);
 
     const [form] = Form.useForm();
     const [isCredit, setIsCredit] = useState(true);
@@ -79,8 +79,8 @@ function TransactionForm({setWalletDetails}) {
                     label="Amount"
                     name="amount"
                     rules={[
-                        { required: true, message: 'Please enter amount' },
-                        { type: 'Number', message: 'Amount must be a number' }
+                        {required: true, message: 'Please enter amount'},
+                        {type: 'Number', message: 'Amount must be a number'}
                         // { type: 'number', min: 0, message: 'Amount must be greater than 0' }
 
                     ]}
@@ -91,7 +91,7 @@ function TransactionForm({setWalletDetails}) {
                         step="0.0001"
                         min="0.0001"
                         stringMode
-                        style={{ width: 200 }}
+                        style={{width: 200}}
                         precision={4}
                     />
                 </Form.Item>
@@ -100,8 +100,8 @@ function TransactionForm({setWalletDetails}) {
                     label="Description"
                     name="description"
                     rules={[
-                        { required: true, message: 'Please enter description' },
-                        { min: 3, message: 'Description must be at least 3 characters' }
+                        {required: true, message: 'Please enter description'},
+                        {min: 3, message: 'Description must be at least 3 characters'}
                     ]}
                 >
                     <Input
@@ -124,7 +124,7 @@ function TransactionForm({setWalletDetails}) {
                     <Button
                         type="primary"
                         htmlType="submit"
-                        icon={isCredit ? <PlusOutlined />: <MinusOutlined />}
+                        icon={isCredit ? <PlusOutlined/> : <MinusOutlined/>}
                         loading={loading}
                         block
                         danger={!isCredit}
