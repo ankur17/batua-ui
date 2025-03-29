@@ -1,3 +1,4 @@
+// MAY use: date-fns's format function too
 export const formatDateTime = (inputDate) => {
     // convert to a readable format: March 12, 2:00:00 PM && March 12, 2:00:00PM
     const now = new Date();
