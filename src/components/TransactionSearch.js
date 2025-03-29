@@ -80,6 +80,7 @@ function TransactionSearch() {
                 allowClear
                 enterButton="Search"
                 size="large"
+                loading={isLoading}
                 onSearch={fetchSearch}
             />
 

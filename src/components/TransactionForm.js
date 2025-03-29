@@ -49,8 +49,15 @@ function TransactionForm({}) {
     const handleSubmit = async (values) => {
         setLoading(true);
         try {
+            const amountFloat = Number(values.amount);
+            const calibratedAmount = isCredit ? amountFloat : -amountFloat;
 
-            const calibratedAmount = isCredit ? values.amount : -values.amount;
+            if (!isCredit && walletDetails.balance < amountFloat) {
+                message.error('Please enter a valid amount!');
+                setLoading(false);
+                return
+            }
+
             const result = await createTransaction({
                 amount: calibratedAmount,
                 description: values.description,
