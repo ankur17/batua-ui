@@ -68,3 +68,14 @@ export const getTransactions = async ({skip, limit}) => {
         console.log(err);
     }
 }
+
+
+export const transactionCSV = () => {
+    try {
+        const walletId = resolveWalletId()
+        return `${SERVER_URL + API_PATH}/transactions/export/${walletId}`;
+    } catch (e) {
+        console.log(e)
+    }
+    return ""
+}
