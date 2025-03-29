@@ -35,12 +35,6 @@ function TransactionForm() {
     const [isCredit, setIsCredit] = useState(true);
     const [loading, setLoading] = useState(false);
 
-
-    if(hasWallet){
-        return null
-    }
-
-
     const handleSubmit = async (values) => {
         setLoading(true);
         try {
