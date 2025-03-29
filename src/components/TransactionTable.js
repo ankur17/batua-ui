@@ -1,55 +1,56 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import styled from 'styled-components';
-import { Button } from 'antd';
-import { DownloadOutlined } from '@ant-design/icons';
+import {Button} from 'antd';
+import {DownloadOutlined} from '@ant-design/icons';
+import {getTransactions} from "../Services/apiCall";
+import {formatDateTime} from "../utils/dateTime";
 
-const API_BASE_URL = 'http://localhost:8081/api/v1/transactions?walletId=67e32b50bcd1a5b93e017f36&';
 
 const TableContainer = styled.div`
-  margin: 2rem auto;
-  max-width: 1000px;
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  padding: 1rem;
+    margin: 2rem auto;
+    max-width: 1000px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 1rem;
 `;
 
 const Table = styled.table`
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 1rem;
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
 `;
 
 const Th = styled.th`
-  padding: 1rem;
-  text-align: left;
-  background-color: #f8f9fa;
-  border-bottom: 2px solid #dee2e6;
-  font-weight: 500;
+    padding: 1rem;
+    text-align: left;
+    background-color: #f8f9fa;
+    border-bottom: 2px solid #dee2e6;
+    font-weight: 500;
 `;
 
 const Td = styled.td`
-  padding: 1rem;
-  border-bottom: 1px solid #dee2e6;
+    padding: 1rem;
+    border-bottom: 1px solid #dee2e6;
 `;
 
 const Header = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
 `;
 
 const Title = styled.h2`
-  margin: 0;
-  color: #333;
+    margin: 0;
+    color: #333;
 `;
 
 const PaginationContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-  margin-top: 1rem;
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1rem;
 `;
 
 function TransactionsTable() {
@@ -70,11 +71,11 @@ function TransactionsTable() {
         setLoading(true);
         try {
             const skip = (page - 1) * pageSize;
-            const response = await fetch(`${API_BASE_URL}&skip=${skip}&limit=${pageSize}`);
-            const data = await response.json();
+            const data = await getTransactions({skip, limit: pageSize});
+
 
             // Update cache
-            setCache(prev => ({ ...prev, [page]: data }));
+            setCache(prev => ({...prev, [page]: data}));
             setTransactions(data);
 
             // If we got less than pageSize items, we've reached the end
@@ -112,7 +113,7 @@ function TransactionsTable() {
                 <Title>Wallet Transactions</Title>
                 <Button
                     type="primary"
-                    icon={<DownloadOutlined />}
+                    icon={<DownloadOutlined/>}
                     onClick={handleExport}
                 >
                     Export to CSV
@@ -122,11 +123,9 @@ function TransactionsTable() {
             <Table>
                 <thead>
                 <tr>
-                    <Th>ID</Th>
-                    <Th>Wallet ID</Th>
+                    <Th>Description</Th>
                     <Th>Amount</Th>
                     <Th>Balance</Th>
-                    <Th>Description</Th>
                     <Th>Date</Th>
                     <Th>Type</Th>
                 </tr>
@@ -134,12 +133,10 @@ function TransactionsTable() {
                 <tbody>
                 {transactions.map(transaction => (
                     <tr key={transaction._id}>
-                        <Td>{transaction._id}</Td>
-                        <Td>{transaction.walletId}</Td>
-                        <Td>${transaction.amount.toFixed(2)}</Td>
-                        <Td>${transaction.balance.toFixed(2)}</Td>
                         <Td>{transaction.description}</Td>
-                        <Td>{new Date(transaction.createdAt).toLocaleString()}</Td>
+                        <Td>${transaction.amount.toFixed(4)}</Td>
+                        <Td>${transaction.balance.toFixed(4)}</Td>
+                        <Td>{formatDateTime(transaction.createdAt)}</Td>
                         <Td>{transaction.type}</Td>
                     </tr>
                 ))}
