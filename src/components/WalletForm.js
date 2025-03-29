@@ -1,9 +1,16 @@
 import React from 'react';
 import { Form, Input, Button, Card } from 'antd';
 import { WalletOutlined } from '@ant-design/icons';
+import {WalletContext} from "../context";
 
 function WalletForm() {
+    const {hasWallet} = React.useContext(WalletContext);
+
     const [form] = Form.useForm();
+
+    if(!hasWallet){
+        return null
+    }
 
     const onFinish = (values) => {
         console.log('Form submitted:', values);

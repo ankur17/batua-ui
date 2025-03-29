@@ -2,35 +2,44 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Input, Button, Switch, message, Form } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
+import {WalletContext} from "../context";
 
 const FormContainer = styled.div`
-  margin: 2rem auto;
-  max-width: 500px;
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  padding: 1.5rem;
+    margin: 2rem auto;
+    max-width: 500px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
 `;
 
 const StyledForm = styled(Form)`
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
 `;
 
 const ToggleContainer = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
 `;
 
 const WALLET_ID = '67e32b50bcd1a5b93e017f36';
 const API_URL = `http://localhost:8081/api/v1/transact/${WALLET_ID}`;
 
 function TransactionForm() {
+    const {walletDetails, hasWallet} = React.useContext(WalletContext);
+
     const [form] = Form.useForm();
     const [isCredit, setIsCredit] = useState(true);
     const [loading, setLoading] = useState(false);
+
+
+    if(hasWallet){
+        return null
+    }
+
 
     const handleSubmit = async (values) => {
         setLoading(true);
