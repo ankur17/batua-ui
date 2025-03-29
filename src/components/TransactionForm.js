@@ -1,8 +1,21 @@
 import React, { useState } from 'react';
-import styled from 'styled-components';
-import { Input, Button, Switch, message, Form } from 'antd';
-import { PlusOutlined } from '@ant-design/icons';
+import styled, { keyframes } from 'styled-components';
+import {Input, Button, Switch, message, Form, InputNumber} from 'antd';
+import {MinusOutlined, PlusOutlined} from '@ant-design/icons';
 import {WalletContext} from "../context";
+import {createTransaction} from "../Services/apiCall";
+
+
+const bounce = keyframes`
+    from {
+        transform: translateY(30%);
+        opacity: 0;
+    }
+    to{
+        transform: translateY(0);
+        opacity: 1;
+    }
+`;
 
 const FormContainer = styled.div`
     margin: 2rem auto;
@@ -11,6 +24,7 @@ const FormContainer = styled.div`
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     padding: 1.5rem;
+    animation: ${bounce} 0.3s;
 `;
 
 const StyledForm = styled(Form)`
@@ -20,15 +34,12 @@ const StyledForm = styled(Form)`
 `;
 
 const ToggleContainer = styled.div`
-    display: flex;
-    align-items: center;
-    gap: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
 `;
 
-const WALLET_ID = '67e32b50bcd1a5b93e017f36';
-const API_URL = `http://localhost:8081/api/v1/transact/${WALLET_ID}`;
-
-function TransactionForm() {
+function TransactionForm({setWalletDetails}) {
     const {walletDetails, hasWallet} = React.useContext(WalletContext);
 
     const [form] = Form.useForm();
@@ -38,20 +49,13 @@ function TransactionForm() {
     const handleSubmit = async (values) => {
         setLoading(true);
         try {
-            const response = await fetch(API_URL, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    amount: isCredit ? Math.abs(values.amount) : -Math.abs(values.amount),
-                    description: values.description
-                }),
-            });
 
-            if (!response.ok) {
-                throw new Error('Transaction failed');
-            }
+            const calibratedAmount = isCredit ? values.amount : -values.amount;
+            const result = await createTransaction({
+                amount: calibratedAmount,
+                description: values.description,
+            })
+            setWalletDetails({...walletDetails, balance: result.balance});
 
             message.success('Transaction completed successfully');
             form.resetFields();
@@ -76,16 +80,19 @@ function TransactionForm() {
                     name="amount"
                     rules={[
                         { required: true, message: 'Please enter amount' },
-                        { type: 'number', message: 'Amount must be a number' },
-                        { type: 'number', min: 0.0001, message: 'Amount must be greater than 0' }
+                        { type: 'Number', message: 'Amount must be a number' }
+                        // { type: 'number', min: 0, message: 'Amount must be greater than 0' }
+
                     ]}
                 >
-                    <Input
-                        type="number"
+                    <InputNumber
                         placeholder="Enter amount"
                         prefix="$"
                         step="0.0001"
                         min="0.0001"
+                        stringMode
+                        style={{ width: 200 }}
+                        precision={4}
                     />
                 </Form.Item>
 
@@ -117,9 +124,10 @@ function TransactionForm() {
                     <Button
                         type="primary"
                         htmlType="submit"
-                        icon={<PlusOutlined />}
+                        icon={isCredit ? <PlusOutlined />: <MinusOutlined />}
                         loading={loading}
                         block
+                        danger={!isCredit}
                     >
                         Execute Transaction
                     </Button>

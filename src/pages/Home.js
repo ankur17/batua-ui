@@ -5,7 +5,8 @@ import TransactionForm from '../components/TransactionForm';
 import TransactionsTable from '../components/TransactionsTable';
 import Header from '../components/Header';
 import {WalletContext} from "../context";
-import {LOCALSTORE_KEYS} from "../Services/constants";
+import {LOCALSTORE_KEYS, PAGE_STATE} from "../Services/constants";
+import PageToggle from "../components/PageToggle";
 
 const { Content } = Layout;
 const { Title } = Typography;
@@ -13,6 +14,7 @@ const { Title } = Typography;
 
 function Home() {
     const [walletDetails, setWalletDetails] = useState({});
+    const [pageState, setPageState] = useState(PAGE_STATE.FORM)
 
     useEffect(() => {
         const walletData = localStorage.getItem(LOCALSTORE_KEYS.WALLET_DETAILS);
@@ -31,9 +33,10 @@ function Home() {
                     <Title level={1} style={{ textAlign: 'center', marginBottom: '2rem' }}>
                         Wallet Management System
                     </Title>
-                    <WalletForm />
-                    <TransactionForm />
-                    <TransactionsTable />
+                    {hasWallet && <PageToggle setPageState={setPageState}/> }
+                    {!hasWallet && <WalletForm />}
+                    {hasWallet && pageState===PAGE_STATE.FORM && <TransactionForm setWalletDetails={setWalletDetails} />}
+                    {hasWallet && pageState===PAGE_STATE.TRANSACTIONS && <TransactionsTable />}
                 </Content>
             </WalletContext.Provider>
         </Layout>
