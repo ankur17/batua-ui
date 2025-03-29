@@ -1,5 +1,5 @@
 export const LOCALSTORE_KEYS = {
-    WALLET_DETAILS: 'walletDetails',
+    WALLET_DETAILS: 'walletDetails', // not used not, earlier were saving the wallet details in localstore, but now in state only
     WALLET_ID: 'walletId',
 }
 

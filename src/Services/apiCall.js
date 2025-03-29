@@ -1,39 +1,13 @@
 import {LOCALSTORE_KEYS} from "./constants";
+import {getFetch, postFetch, resolveWalletId,} from "../utils/apiHelper";
 
 const API_PATH = '/api/v1';
 const SERVER_URL = process.env.REACT_APP_SERVER_URL;
 
-const resolveWalletId = () => {
-    const walletData = localStorage.getItem(LOCALSTORE_KEYS.WALLET_DETAILS);
-    if (walletData) {
-        const {_id} = JSON.parse(walletData);
-        return _id;
-    } else {
-        throw new Error('Wallet not found.');
-    }
-}
-
-const postFetch = (url, payload) => {
-    return fetch(url, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-    })
-}
-
-const getFetch = (url, queryParams) => {
-    const formedUrl = url + "?" + new URLSearchParams(queryParams)
-    return fetch(formedUrl)
-}
 
 export const getWalletDetails = async (walletId) => {
     const url = `${SERVER_URL + API_PATH}/wallet/${walletId}`;
-    const response = await fetch(url)
-    const data = await response.json();
-    console.log("OUT", data);
-    return data;
+    return getFetch(url)
 }
 
 export const setupWallet = async ({name, balance}) => {
