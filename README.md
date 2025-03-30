@@ -44,7 +44,7 @@ npm start-local
 
 ```
 
-## Frontend Application
+## Backend Application
 
 The frontend application for this API is available at:
 
