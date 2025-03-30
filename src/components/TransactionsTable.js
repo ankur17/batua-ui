@@ -5,6 +5,7 @@ import {DownloadOutlined} from '@ant-design/icons';
 import {getTransactions, transactionCSV} from "../Services/apiCall";
 import {formatDateTime} from "../utils/dateTime";
 import {WalletContext} from "../context";
+import {TABLE_SORT_FIELDS} from "../Services/constants";
 
 
 const TableContainer = styled.div`
@@ -20,6 +21,12 @@ const Table = styled.table`
     width: 100%;
     border-collapse: collapse;
     margin-top: 1rem;
+    th{
+        font-weight: bold;
+    }
+    sub {
+        font-weight: normal;
+    }
 `;
 
 const Th = styled.th`
@@ -53,6 +60,7 @@ const PaginationContainer = styled.div`
     gap: 1rem;
     margin-top: 1rem;
 `;
+let CACHE_STORE = {}
 
 function TransactionsTable() {
     const {walletDetails} = React.useContext(WalletContext);
@@ -60,25 +68,37 @@ function TransactionsTable() {
     const [transactions, setTransactions] = useState([]);
     const [loading, setLoading] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
+    const [sortBy, setSortBy] = useState(TABLE_SORT_FIELDS.DATE);
     const [hasMore, setHasMore] = useState(true);
-    const [cache, setCache] = useState({});
+
+    // DEV_NOTE: response list cached
+    // better: cached on the basis of the sorted array too.
+    // Also: should keep a max limit to cached data. The state variable to not be bulky
+    // const [cache, setCache] = useState({});
     const pageSize = 10;
 
-    const fetchTransactions = async (page) => {
+
+    const handleSort = (value) => {
+        setCurrentPage(1)
+        setSortBy(value);
+    }
+
+    const fetchTransactions = async (page, sort) => {
         // Check cache first
-        if (cache[page]) {
-            setTransactions(cache[page]);
+        if (CACHE_STORE[page] && CACHE_STORE.sortBy === sort) {
+            setTransactions(CACHE_STORE[page]);
             return;
         }
 
         setLoading(true);
         try {
             const skip = (page - 1) * pageSize;
-            const data = await getTransactions({skip, limit: pageSize});
+            const data = await getTransactions({skip, limit: pageSize, sortBy:sort});
 
 
             // Update cache
-            setCache(prev => ({...prev, [page]: data}));
+            CACHE_STORE[page] = data
+            CACHE_STORE.sortBy = sort
             setTransactions(data);
 
             // If we got less than pageSize items, we've reached the end
@@ -91,8 +111,15 @@ function TransactionsTable() {
     };
 
     useEffect(() => {
-        fetchTransactions(currentPage);
-    }, [currentPage]);
+        fetchTransactions(currentPage, sortBy);
+    }, [currentPage, sortBy]);
+
+    useEffect(() => {
+        return ()=>{
+            console.log("Peace OUT");
+            CACHE_STORE = {}
+        }
+    }, []);
 
     const getCSVDownloadURL = useMemo(() => transactionCSV(), [walletDetails]);
     const handleNext = () => {
@@ -107,9 +134,6 @@ function TransactionsTable() {
         }
     };
 
-    const handleExport = () => {
-        // TODO: Implement export to CSV
-    };
 
     return (
         <TableContainer>
@@ -119,7 +143,6 @@ function TransactionsTable() {
                     type="primary"
                     icon={<DownloadOutlined/>}
                     href={getCSVDownloadURL}
-                    // onClick={handleExport}
                 >
                     Export to CSV
                 </Button>
@@ -129,9 +152,9 @@ function TransactionsTable() {
                 <thead>
                 <tr>
                     <Th>Description</Th>
-                    <Th>Amount</Th>
+                    <Th onClick={() => handleSort(TABLE_SORT_FIELDS.AMOUNT)}>Amount <sub>(click sort)</sub></Th>
                     <Th>Balance</Th>
-                    <Th>Date</Th>
+                    <Th onClick={() => handleSort(TABLE_SORT_FIELDS.DATE)}>Date <sub>(click sort)</sub></Th>
                     <Th>Type</Th>
                 </tr>
                 </thead>

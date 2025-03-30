@@ -9,3 +9,8 @@ export const PAGE_STATE = {
     TRANSACTIONS : "TRANSACTIONS",
     SEARCH : "SEARCH",
 }
+
+export const TABLE_SORT_FIELDS = {
+    DATE: "DATE",
+    AMOUNT: "AMOUNT",
+}

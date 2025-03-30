@@ -49,11 +49,11 @@ export const createTransaction = async ({amount, description}) => {
     }
 }
 
-export const getTransactions = async ({skip, limit}) => {
+export const getTransactions = async ({skip, limit, sortBy}) => {
     try {
         const walletId = resolveWalletId()
         const url = `${SERVER_URL + API_PATH}/transactions`;
-        const response = await getFetch(url, {walletId, skip, limit})
+        const response = await getFetch(url, {walletId, skip, limit, sortBy})
         return await response.json();
     } catch (err) {
         console.log(err);
