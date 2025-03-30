@@ -3,7 +3,7 @@
 A robust financial management system built with React, featuring real-time transaction tracking, wallet management, and
 comprehensive reporting capabilities.
 
-## :notebook: [Notion Link](https://www.notion.so/Wallet-System-Batua-1c31be495c8b80e5a6e4c648c1565d7c)
+## :notebook: [Notion Link](https://able-ranunculus-f1d.notion.site/Wallet-System-Batua-1c31be495c8b80e5a6e4c648c1565d7c)
 
 ## Features
 
