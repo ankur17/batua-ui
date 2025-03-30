@@ -1,100 +1,88 @@
-# Welcome to React Router!
+# Batua - Wallet System
 
-A modern, production-ready template for building full-stack React applications using React Router.
+A robust financial management system built with React, featuring real-time transaction tracking, wallet management, and
+comprehensive reporting capabilities.
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/remix-run/react-router-templates/tree/main/default)
+## :notebook: [Notion Link](https://www.notion.so/Wallet-System-Batua-1c31be495c8b80e5a6e4c648c1565d7c)
 
 ## Features
 
-- 🚀 Server-side rendering
-- ⚡️ Hot Module Replacement (HMR)
-- 📦 Asset bundling and optimization
-- 🔄 Data loading and mutations
-- 🔒 TypeScript by default
-- 🎉 TailwindCSS for styling
-- 📖 [React Router docs](https://reactrouter.com/)
+- **Wallet Management**
+  - Create and manage multiple wallets
+  - Transaction history with pagination
+  - Export functionality (CSV)
+  - Text search
 
-## Getting Started
+- **Transaction Processing**
+  - Credit/Debit operations
+  - Precise decimal handling (4 decimal places)
 
-### Installation
+## Tech Stack
 
-Install the dependencies:
+- **Frontend**
+  - React 18
+  - Ant Design 5.x
+  - Styled Components
+  - React Router 6 (very small case)
+
+- **Development Tools**
+  - Storybook
+  - Jest
+
+## Installation
 
 ```bash
+# Clone the repository
+git clone git@github.com:ankur17/batua-ui.git
+cd batua-ui
+
+# Install dependencies
 npm install
+
+# Start development server
+npm start-local
+
 ```
 
-### Development
+## Frontend Application
 
-Start the development server with HMR:
+The frontend application for this API is available at:
+
+- GitHub Repository: [Batua-Server](https://github.com/ankur17/Batua-Server)
+- Live Demo: [https://batua-server.onrender.com/](https://batua-server.onrender.com/)
+
+## Configuration
+
+The application uses environment variables for configuration:
+
+```env
+REACT_APP_API_URL=http://localhost:8081
+REACT_APP_API_VERSION=v1
+```
+
+## Testing
 
 ```bash
-npm run dev
+npm run storybook
 ```
 
-Your application will be available at `http://localhost:5173`.
+## Component Documentation
 
-## Building for Production
+Components are documented using Storybook. Available stories include:
 
-Create a production build:
+- `Header`: Header component with wallet balance display
+- `WalletForm`: Wallet creation and management
+- `TransactionForm`: Transaction processing
+- `TransactionsTable`: Transaction history display
+- `TransactionSearch` : Transaction description Fuzzy Search
 
-```bash
-npm run build
-```
+## Live Deployment
 
-## Deployment
+### vercel.com Deployment
 
-### Docker Deployment
+The application is deployed on Render.com at [https://batua-ui.vercel.app/](https://batua-ui.vercel.app/)
 
-This template includes three Dockerfiles optimized for different package managers:
+## Repo Boilerplate
 
-- `Dockerfile` - for npm
-- `Dockerfile.pnpm` - for pnpm
-- `Dockerfile.bun` - for bun
-
-To build and run using Docker:
-
-```bash
-# For npm
-docker build -t my-src .
-
-# For pnpm
-docker build -f Dockerfile.pnpm -t my-src .
-
-# For bun
-docker build -f Dockerfile.bun -t my-src .
-
-# Run the container
-docker run -p 3000:3000 my-src
-```
-
-The containerized application can be deployed to any platform that supports Docker, including:
-
-- AWS ECS
-- Google Cloud Run
-- Azure Container Apps
-- Digital Ocean App Platform
-- Fly.io
-- Railway
-
-### DIY Deployment
-
-If you're familiar with deploying Node applications, the built-in app server is production-ready.
-
-Make sure to deploy the output of `npm run build`
-
-```
-├── package.json
-├── package-lock.json (or pnpm-lock.yaml, or bun.lockb)
-├── build/
-│   ├── client/    # Static assets
-│   └── server/    # Server-side code
-```
-
-## Styling
-
-This template comes with [Tailwind CSS](https://tailwindcss.com/) already configured for a simple default starting experience. You can use whatever CSS framework you prefer.
-
----
-
-Built with ❤️ using React Router.
+- The repo is forked
+  from: [Versel React Router Boilerplate](https://vercel.com/templates/react-router/react-router-boilerplate)
