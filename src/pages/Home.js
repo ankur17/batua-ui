@@ -6,11 +6,11 @@ import TransactionsTable from '../components/TransactionsTable';
 import Header from '../components/Header';
 import {WalletContext} from "../context";
 import {PAGE_STATE} from "../Services/constants";
-import PageToggle from "../components/PageToggle";
+import PageToggle from "../customComponents/PageToggle";
 import TransactionSearch from "../components/TransactionSearch";
 import {resolveWalletId} from "../utils/apiHelper";
 import {getWalletDetails} from "../Services/apiCall";
-import Loading from "../components/Loading";
+import Loading from "../customComponents/Loading";
 import PageTitle from "../customComponents/PageTitle";
 
 const {Content} = Layout;
