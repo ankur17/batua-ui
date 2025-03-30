@@ -1,6 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 import {WalletContext} from "../context";
+import logoIcon from "../Assets/icons8-wallet-account-100.png";
+// icon source: // https://img.icons8.com/cotton/64/euro-account.png
 
 const HeaderContainer = styled.footer`
     background-color: #fff;
@@ -21,10 +23,11 @@ const HeaderContent = styled.div`
     margin: 0 auto;
 `;
 
-const Logo = styled.div`
+const BrandName = styled.div`
     font-size: 1.5rem;
     font-weight: bold;
     color: #333;
+    margin-left: 5px;
 `;
 
 const WalletBalance = styled.div`
@@ -34,12 +37,26 @@ const WalletBalance = styled.div`
     font-weight: 500;
 `;
 
+const Logo = styled.img`
+    width: 2rem;
+    height: 2rem;
+`
+
+const Branding = styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+`
+
 function Header() {
     const {walletDetails, hasWallet} = React.useContext(WalletContext);
     return (
         <HeaderContainer>
             <HeaderContent>
-                <Logo>Wallet App</Logo>
+                <Branding>
+                    <Logo src={logoIcon} alt="Logo" />
+                    <BrandName>Batua</BrandName>
+                </Branding>
                 <WalletBalance show={hasWallet} >
                     Balance: ${walletDetails?.balance?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                 </WalletBalance>
