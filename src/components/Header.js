@@ -58,7 +58,7 @@ function Header() {
                     <BrandName>Batua</BrandName>
                 </Branding>
                 <WalletBalance show={hasWallet} >
-                    Balance: ${walletDetails?.balance?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                    Balance: ${walletDetails?.balance?.toLocaleString('en-US', { minimumFractionDigits: 4, maximumFractionDigits: 4 })}
                 </WalletBalance>
             </HeaderContent>
         </HeaderContainer>
